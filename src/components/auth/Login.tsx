@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const LoginPage = () => {
+const Login = () => {
   const formData = {
     firstName: "",
     lastName: "",
@@ -30,6 +30,11 @@ const LoginPage = () => {
       value.email &&
       emailRegex.test(value.email)
     ) {
+      if (typeof window !== "undefined") {
+        const data = JSON.stringify(value);
+        localStorage.setItem("auth", data);
+      }
+
       setError(false);
       setValue(formData);
       localStorage.setItem("isAuthenticated", "true");
@@ -124,4 +129,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;

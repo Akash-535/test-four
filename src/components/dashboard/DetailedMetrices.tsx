@@ -9,22 +9,32 @@ import {
   NoParasIcon,
 } from "@/utils/icons";
 import Image from "next/image";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const DetailedMetrices = () => {
   const [click, setClick] = useState<Number | null>(0);
-  const activeHandler = (index: number) =>
+  const [saveFileName, setSaveFileName] = useState("");
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const activeHandler = (index: number) => {
     setClick(click === index ? null : index);
+  };
 
+  useEffect(() => {
+    setSaveFileName(localStorage.getItem("fileName") as any);
+
+    const uploadedImageURL = localStorage.getItem("uploadedImage");
+    setUploadedImage(uploadedImageURL);
+  });
+
+  const router = useRouter();
   return (
     <div className="flex items-center justify-between flex-col min-h-screen w-full">
       <Header />
       <div className="max-w-[1140px] mx-auto w-full pb-[46px] max-xl:px-4">
         <div className="w-full justify-between flex items-center py-6">
           <p className="text-2xl font-semibold font-syne custom-black max-lg:text-xl max-md:text-lg">
-            file123.zip
+            {saveFileName}
           </p>
           <button className="px-6 py-4 max-md:px-4 max-md:py-3 border border-[#0D0D0D80] rounded-md cursor-pointer uppercase font-syne leading-[100%] text-sm font-medium hover:bg-[#EA4335] hover:text-white hover:border-transparent duration-300 ease-linear">
             Upload more files
@@ -67,26 +77,32 @@ const DetailedMetrices = () => {
         <div className="flex justify-between w-full flex-wrap max-lg:justify-center max-lg:gap-6">
           <div className="flex flex-col gap-4 max-w-[558px] w-full max-xl:max-w-[480px] max-lg:max-w-[600px]">
             {DETAILED_METRICS_LIST.map((obj, i) => (
-              <Link
-                href={`?metrices=${obj.title
-                  .toLowerCase()
-                  .replace(/\s/g, "-")}`}
-                onClick={() => activeHandler(i)}
+              <button
                 key={i}
                 className={`py-3 px-4 flex justify-between items-center bg-white rounded-lg border hover:border-[#ED1C24] duration-300 ease-linear max-lg:max-w-none ${
                   click === i ? "border-[#EA4335]" : "border-transparent"
                 }`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(
+                    `/dashboard?metrices=${obj.title
+                      .toLowerCase()
+                      .replaceAll(" ", "-")}`,
+                    { scroll: false }
+                  );
+                  activeHandler(i);
+                }}
               >
                 <div className="flex items-center gap-4">
-                  <p className="text-2xl font-semibold font-syne size-10 bg-[#FFF1F2] rounded-full flex items-center justify-center">
+                  <span className="text-2xl font-semibold font-syne size-10 bg-[#FFF1F2] rounded-full flex items-center justify-center">
                     {obj.num}
-                  </p>
-                  <p className="text-sm font-normal leading-[100%]">
+                  </span>
+                  <span className="text-sm font-normal leading-[100%]">
                     {obj.title}
-                  </p>
+                  </span>
                 </div>
                 <NextArrowIcon />
-              </Link>
+              </button>
             ))}
           </div>
           <div className="bg-white min-h-[464px] max-lg:min-h-[380px] w-full max-w-[558px] max-xl:max-w-[480px] flex flex-col justify-center items-start pl-5 rounded-lg">

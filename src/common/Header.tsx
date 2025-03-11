@@ -1,9 +1,33 @@
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import { DownArrowIcon } from "../utils/icons";
 
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 const Header = () => {
+  const [user, setuser] = useState<User>({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+  const [profileImage, setProfileImage] = useState("");
+  useEffect(() => {
+    const data = localStorage.getItem("auth");
+
+    if (data) {
+      setuser(JSON.parse(data));
+    }
+    const storedImage = localStorage.getItem("profileImage");
+    if (storedImage) {
+      setProfileImage(storedImage);
+    }
+  }, []);
+
   return (
     <div className="p-4 w-full">
       <div className="flex w-full justify-between items-center max-w-[1140px] mx-auto">
@@ -28,13 +52,13 @@ const Header = () => {
           <Image
             height={40}
             width={40}
-            className="max-w-10"
-            src="/assets/images/john-doe-img.webp"
-            alt="john doe"
+            className="size-10 rounded-full object-cover"
+            src={profileImage || "/assets/images/john-doe-img.webp"}
+            alt="profile"
           />
           <div>
             <p className="text-base font-syne font-medium leading-[100%] pb-[1px]">
-              Jhon doe
+              {user.firstName + " " + user.lastName || "John Doe"}
             </p>
             <p className="opacity-70 text-sm font-normal leading-[100%]">
               Admin

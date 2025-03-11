@@ -14,24 +14,37 @@ import React, { useEffect, useState } from "react";
 
 const Hero = () => {
   const [upload, setUpload] = useState(false);
-  const [error, setError] = useState(" ");
   const [fileName, setFileName] = useState("");
   const [uploadCount, setUploadCount] = useState(0);
   const router = useRouter();
 
   const imageUploadHandler = (e: any) => {
-    const fileName = e.target.files?.[0].name ?? "";
-    setFileName(fileName);
-    localStorage.setItem("fileName", fileName);
-    setUpload(true);
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      const fileName = file.name ?? "";
+      setFileName(fileName);
+      localStorage.setItem("fileName", fileName);
+      setUpload(true);
+      const imageUrl = URL.createObjectURL(file);
+      localStorage.setItem("profileImage", imageUrl);
+    } else {
+      alert("Please upload a valid image file.");
+    }
   };
 
   const imageDragHandler = (e: any) => {
     e.preventDefault();
-    const fileName = e.dataTransfer.files?.[0].name ?? "";
-    setFileName(fileName);
-    localStorage.setItem("fileName", fileName);
-    setUpload(true);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      const fileName = file.name ?? "";
+      setFileName(fileName);
+      localStorage.setItem("fileName", fileName);
+      setUpload(true);
+      const imageUrl = URL.createObjectURL(file);
+      localStorage.setItem("profileImage", imageUrl);
+    } else {
+      alert("Please upload a valid image file.");
+    }
   };
 
   useEffect(() => {
@@ -124,7 +137,6 @@ const Hero = () => {
                   >
                     <PlusIcon />
                   </label>
-                  <p>{error}</p>
                   <input
                     type="file"
                     id="imageInp"

@@ -1,10 +1,10 @@
-import LoginPage from "@/components/login-page/LoginPage";
+import Login from "@/components/auth/Login";
 import { Suspense } from "react";
 
 export default function Home() {
   return (
     <Suspense>
-      <LoginPage />
+      <Login />
     </Suspense>
   );
 }
