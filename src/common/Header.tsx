@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { DownArrowIcon } from "../utils/icons";
+import { usePathname } from "next/navigation";
 
 interface User {
   firstName: string;
@@ -16,9 +17,9 @@ const Header = () => {
     email: "",
   });
   const [profileImage, setProfileImage] = useState("");
+  const dashboardPage = usePathname() === "/dashboard";
   useEffect(() => {
     const data = localStorage.getItem("auth");
-
     if (data) {
       setuser(JSON.parse(data));
     }
@@ -53,7 +54,11 @@ const Header = () => {
             height={40}
             width={40}
             className="size-10 rounded-full object-cover"
-            src={profileImage || "/assets/images/john-doe-img.webp"}
+            src={
+              dashboardPage && profileImage
+                ? profileImage
+                : "/assets/images/john-doe-img.webp"
+            }
             alt="profile"
           />
           <div>

@@ -1,4 +1,6 @@
 "use client";
+import Footer from "@/common/Footer";
+import Header from "@/common/Header";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -43,7 +45,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex justify-center items-center px-4">
+    <div className="min-h-screen relative flex items-center flex-col justify-between">
       <Image
         width={169.25}
         height={211.02}
@@ -58,7 +60,8 @@ const Login = () => {
         src="/assets/images/right-vector.webp"
         alt="right vector"
       />
-      <div className="w-full flex justify-center items-center flex-col">
+      <Header />
+      <div className="w-full flex justify-center items-center flex-col px-4">
         <h1 className="text-3xl font-semibold leading-[58px] font-syne">
           Welcome Back
         </h1>
@@ -125,6 +128,7 @@ const Login = () => {
           </button>
         </form>
       </div>
+      <Footer />
     </div>
   );
 };

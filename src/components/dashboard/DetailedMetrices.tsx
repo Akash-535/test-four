@@ -9,25 +9,21 @@ import {
   NoParasIcon,
 } from "@/utils/icons";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const DetailedMetrices = () => {
-  const [click, setClick] = useState<Number | null>(0);
   const [saveFileName, setSaveFileName] = useState("");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const activeHandler = (index: number) => {
-    setClick(click === index ? null : index);
-  };
-
   useEffect(() => {
     setSaveFileName(localStorage.getItem("fileName") as any);
-
     const uploadedImageURL = localStorage.getItem("uploadedImage");
     setUploadedImage(uploadedImageURL);
   });
 
   const router = useRouter();
+  const searchParam = useSearchParams();
+  const metrices = searchParam.get("metrices");
   return (
     <div className="flex items-center justify-between flex-col min-h-screen w-full">
       <Header />
@@ -36,7 +32,10 @@ const DetailedMetrices = () => {
           <p className="text-2xl font-semibold font-syne custom-black max-lg:text-xl max-md:text-lg">
             {saveFileName}
           </p>
-          <button className="px-6 py-4 max-md:px-4 max-md:py-3 border border-[#0D0D0D80] rounded-md cursor-pointer uppercase font-syne leading-[100%] text-sm font-medium hover:bg-[#EA4335] hover:text-white hover:border-transparent duration-300 ease-linear">
+          <button
+            onClick={() => router.push("/")}
+            className="px-6 py-4 max-md:px-4 max-md:py-3 border border-[#0D0D0D80] rounded-md cursor-pointer uppercase font-syne leading-[100%] text-sm font-medium hover:bg-[#EA4335] hover:text-white hover:border-transparent duration-300 ease-linear"
+          >
             Upload more files
           </button>
         </div>
@@ -52,7 +51,7 @@ const DetailedMetrices = () => {
               high
             </button>
           </div>
-          <div className="flex gap-4 items-center bg-white py-[19px] px-4 rounded-lg w-full max-w-[267px] max-md:py-3 border border-transparent hover:border-[#ED1C24] duration-300 ease-linear">
+          <div className="flex gap-4 items-center bg-white py-[19px] px-4 rounded-lg w-full max-w-[267px] max-md:py-3 border border-transparent hover:border-[#ED1C24] duration-300 ease-linear max-md:max-w-none">
             <NoMachinesIcon />
             <div>
               <span className="leading-[100%] font-syne font-medium text-[28px]">
@@ -61,7 +60,7 @@ const DetailedMetrices = () => {
               <p className="text-sm leading-[100%]">No of Machines</p>
             </div>
           </div>
-          <div className="flex gap-4 items-center bg-white py-[19px] px-4 rounded-lg w-full max-w-[267px] max-md:py-3 border border-transparent hover:border-[#ED1C24] duration-300 ease-linear">
+          <div className="flex gap-4 items-center bg-white py-[19px] px-4 rounded-lg w-full max-w-[267px] max-md:py-3 border border-transparent hover:border-[#ED1C24] duration-300 ease-linear max-md:max-w-none">
             <NoParasIcon />
             <div>
               <span className="leading-[100%] font-syne font-medium text-[28px]">
@@ -80,7 +79,9 @@ const DetailedMetrices = () => {
               <button
                 key={i}
                 className={`py-3 px-4 flex justify-between items-center bg-white rounded-lg border hover:border-[#ED1C24] duration-300 ease-linear max-lg:max-w-none ${
-                  click === i ? "border-[#EA4335]" : "border-transparent"
+                  metrices === obj.title.toLowerCase().replaceAll(" ", "-")
+                    ? "border-[#EA4335]"
+                    : "border-transparent"
                 }`}
                 onClick={(e) => {
                   e.preventDefault();
@@ -90,7 +91,6 @@ const DetailedMetrices = () => {
                       .replaceAll(" ", "-")}`,
                     { scroll: false }
                   );
-                  activeHandler(i);
                 }}
               >
                 <div className="flex items-center gap-4">
